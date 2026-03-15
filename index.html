@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secretsimo Games Hub v1.7</title>
+<title>Secretsimo Games Hub v1.8</title>
 <style>
 html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#0f0f1f;color:#0ff;font-family:Arial;}
 h1{text-align:center;margin:20px;font-size:2.5rem;text-shadow:0 0 10px #0ff,0 0 20px #0ff,0 0 30px #0ff;}
@@ -24,7 +24,7 @@ input{padding:8px;font-size:1rem;margin:5px;border-radius:6px;border:none;}
 </head>
 <body>
 
-<div id="versionLabel">v1.7</div>
+<div id="versionLabel">v1.8</div>
 
 <!-- Main UI -->
 <div id="main-ui">
@@ -110,33 +110,38 @@ function shake8Ball(){
   document.getElementById('magic8Answer').textContent=rand+" HEMMY 😂🫱";
 }
 
-// ---------------- Snake v1.7 Smooth ----------------
+// ---------------- Snake v1.8 FIXED ----------------
 const sCanvas=document.getElementById('snakeCanvas');
 const sCtx=sCanvas.getContext('2d');
-let snSize=20, snScore=0, snDir='RIGHT', moveDir={x:2,y:0}, speed=2;
+let snSize=20, snScore=0, snDir='RIGHT';
 let snBody=[{x:60,y:60},{x:40,y:60},{x:20,y:60},{x:0,y:60}];
 let food={x:100,y:100};
 
-function placeFood(){food={x:Math.floor(Math.random()*(sCanvas.width/snSize))*snSize,y:Math.floor(Math.random()*(sCanvas.height/snSize))*snSize};
-if(snBody.some(b=>b.x===food.x && b.y===food.y)) placeFood();}
+function placeFood(){
+  food = {x:Math.floor(Math.random()*(sCanvas.width/snSize))*snSize,
+          y:Math.floor(Math.random()*(sCanvas.height/snSize))*snSize};
+  if(snBody.some(b=>b.x===food.x && b.y===food.y)) placeFood();
+}
 
 function updateSnake(){
-  if(snDir==='LEFT') moveDir={x:-speed,y:0};
-  if(snDir==='RIGHT') moveDir={x:speed,y:0};
-  if(snDir==='UP') moveDir={x:0,y:-speed};
-  if(snDir==='DOWN') moveDir={x:0,y:speed};
   const head={...snBody[0]};
-  head.x+=moveDir.x; head.y+=moveDir.y;
+  if(snDir==='LEFT') head.x -= snSize;
+  if(snDir==='RIGHT') head.x += snSize;
+  if(snDir==='UP') head.y -= snSize;
+  if(snDir==='DOWN') head.y += snSize;
+
   snBody.unshift(head);
-  if(Math.abs(head.x-food.x)<speed && Math.abs(head.y-food.y)<speed){snScore++; placeFood();}
+
+  // food
+  if(head.x===food.x && head.y===food.y){snScore++; placeFood();}
   else snBody.pop();
-  if(head.x<0||head.x>=sCanvas.width||head.y<0||head.y>=sCanvas.height){
+
+  // collisions
+  if(head.x<0||head.x>=sCanvas.width||head.y<0||head.y>=sCanvas.height||
+     snBody.slice(1).some(b=>b.x===head.x&&b.y===head.y)){
     snBody=[{x:60,y:60},{x:40,y:60},{x:20,y:60},{x:0,y:60}]; snScore=0; snDir='RIGHT'; placeFood();
   }
-  for(let i=1;i<snBody.length;i++){
-    if(Math.floor(snBody[i].x/snSize)===Math.floor(head.x/snSize) &&
-       Math.floor(snBody[i].y/snSize)===Math.floor(head.y/snSize)){snBody=[{x:60,y:60},{x:40,y:60},{x:20,y:60},{x:0,y:60}]; snScore=0; snDir='RIGHT'; placeFood();}
-  }
+
   document.getElementById('snakeScore').textContent="Score:"+snScore;
 }
 
@@ -148,15 +153,15 @@ function drawSnake(){
     grad.addColorStop(1,"#0ff");
     sCtx.fillStyle=grad; sCtx.shadowColor="#0ff"; sCtx.shadowBlur=10; sCtx.fillRect(b.x,b.y,snSize,snSize);
   });
-  sCtx.fillStyle="#ff0"; sCtx.shadowColor="#ff0"; sCtx.shadowBlur=15; sCtx.fillRect(food.x,food.y,snSize,snSize); sCtx.shadowBlur=0;
+  sCtx.fillStyle="#ff0"; sCtx.shadowColor="#ff0"; sCtx.shadowBlur=15;
+  sCtx.fillRect(food.x,food.y,snSize,snSize); sCtx.shadowBlur=0;
 }
 
-function gameLoop(){
-  updateSnake();
-  drawSnake();
-  requestAnimationFrame(gameLoop);
-}
+setInterval(updateSnake, 150); // logic every 150ms
+function animateSnake(){drawSnake(); requestAnimationFrame(animateSnake);}
+animateSnake();
 
+// controls
 document.addEventListener('keydown', e=>{
   if(e.key==='ArrowUp' && snDir!=='DOWN') snDir='UP';
   if(e.key==='ArrowDown' && snDir!=='UP') snDir='DOWN';
@@ -178,8 +183,6 @@ sCanvas.addEventListener('touchmove', e=>{
   }
   startX=e.touches[0].clientX; startY=e.touches[0].clientY;
 });
-
-placeFood(); requestAnimationFrame(gameLoop);
 
 // ---------------- Pong ----------------
 const pCanvas=document.getElementById('pongCanvas'),pCtx=pCanvas.getContext('2d');
@@ -217,6 +220,7 @@ function drawFlappy(){
 fCanvas.addEventListener('touchstart',()=>bird.dy=-10);
 document.addEventListener('keydown', e=>{if(e.key===' ') bird.dy=-10;});
 drawFlappy();
+
 </script>
 </body>
 </html>
