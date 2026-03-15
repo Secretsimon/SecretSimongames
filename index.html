@@ -5,35 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Secretsimo Games Hub</title>
 <style>
-/* ============== GLOBAL ============== */
-body, html {margin:0; padding:0; overflow:hidden; font-family:Arial,sans-serif; background:#0f0f1f; color:#0ff;}
-h1 {text-align:center; margin:20px; font-size:2.5rem; text-shadow:0 0 10px #0ff,0 0 20px #0ff,0 0 30px #0ff;}
-canvas {display:block; margin:auto; border:2px solid #0ff; background:#000; max-width:95%;}
-input, button {font-size:1rem; padding:10px; margin-top:10px; color:#0ff; background:#1b1b35; border:none; box-shadow:0 0 8px #0ff;}
-button:hover {background:#0ff; color:#000;}
+/* ---------------- GLOBAL ---------------- */
+body, html {margin:0; padding:0; font-family:Arial; background:#0f0f1f; color:#0ff; overflow:hidden;}
+h1{text-align:center;margin:20px;font-size:2.5rem;text-shadow:0 0 10px #0ff,0 0 20px #0ff,0 0 30px #0ff;}
+canvas{display:block;margin:auto;max-width:95%;border:2px solid #0ff;}
 
-/* ============== GRID BG ============== */
-#gridCanvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:0;}
+/* ---------------- GRID ---------------- */
+#gridCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
 
-/* ============== MENU UI ============== */
-#main-ui {position:relative; z-index:2; padding-top:40px; text-align:center;}
-.bubble-container {display:flex; flex-wrap:wrap; justify-content:center; gap:20px; padding:0 10px;}
-.bubble {width:110px; height:110px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;
-    box-shadow:0 0 8px #0ff,0 0 16px #0ff; transition:0.3s; background:#1b1b35; font-weight:bold;}
-.bubble:hover {transform:scale(1.2); box-shadow:0 0 16px #ff0,0 0 32px #ff0;}
+/* ---------------- MENU UI ---------------- */
+#main-ui{position:relative; z-index:2; padding-top:40px; text-align:center;}
+.bubble-container{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;}
+.bubble{width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+cursor:pointer;box-shadow:0 0 8px #0ff,0 0 16px #0ff;background:#1b1b35;font-weight:bold;transition:.3s;}
+.bubble:hover{transform:scale(1.2); box-shadow:0 0 16px #ff0,0 0 32px #ff0;}
 
-/* ============== GAME SECTIONS ============== */
-.game-section {display:none; flex-direction:column; align-items:center; justify-content:center; min-height:80vh; position:relative; z-index:2;}
-.gear-button {position:fixed; top:20px; right:20px; width:50px; height:50px; border-radius:50%;
-    background:#1b1b35; color:#0ff; font-size:28px; display:flex; align-items:center; justify-content:center; cursor:pointer;
-    box-shadow:0 0 10px #0ff,0 0 20px #0ff;}
-.gear-button:hover {transform:scale(1.2); box-shadow:0 0 20px #ff0,0 0 40px #ff0;}
+/* ---------------- GAME SECTION ---------------- */
+.game-section{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;position:relative;z-index:2;}
+.gear-button{position:fixed;top:20px;right:20px;width:50px;height:50px;border-radius:50%;
+background:#1b1b35;color:#0ff;font-size:28px;display:flex;align-items:center;justify-content:center;
+cursor:pointer;box-shadow:0 0 10px #0ff,0 0 20px #0ff;z-index:10;}
+.gear-button:hover{transform:scale(1.2);box-shadow:0 0 20px #ff0,0 0 40px #ff0;}
 
-/* ============== MOBILE ============== */
-@media (max-width:480px) {
-  .bubble {width:90px; height:90px; font-size:0.9rem;}
-  h1 {font-size:1.8rem;}
-}
+/* ---------------- MOBILE ---------------- */
+@media(max-width:480px){.bubble{width:90px;height:90px;font-size:0.9rem;} h1{font-size:1.8rem;}}
 </style>
 </head>
 <body>
@@ -43,243 +38,144 @@ button:hover {background:#0ff; color:#000;}
 
 <!-- MAIN MENU -->
 <div id="main-ui">
-  <h1>Welcome to my Kingdom</h1>
-  <div class="bubble-container">
-    <div class="bubble" onclick="openGame('pong')">Pong</div>
-    <div class="bubble" onclick="openGame('spaceinvaders')">Space Invaders</div>
-    <div class="bubble" onclick="openGame('pacman')">Pac‑Man</div>
-    <div class="bubble" onclick="openGame('snake')">Snake</div>
-    <div class="bubble" onclick="openGame('flappy')">Flappy Bird</div>
-    <div class="bubble" onclick="openGame('calculator')">Calculator</div>
-  </div>
+<h1>Welcome to my Kingdom</h1>
+<div class="bubble-container">
+<div class="bubble" onclick="openGame('pong')">Pong</div>
+<div class="bubble" onclick="openGame('spaceinvaders')">Space Invaders</div>
+<div class="bubble" onclick="openGame('pacman')">Pac‑Man</div>
+<div class="bubble" onclick="openGame('snake')">Snake</div>
+<div class="bubble" onclick="openGame('flappy')">Flappy Bird</div>
+<div class="bubble" onclick="openGame('calculator')">Calculator</div>
+</div>
 </div>
 
-<!-- PONG -->
+<!-- GEAR BUTTON -->
+<div class="gear-button" id="gearBtn" onclick="backToUI()">↩</div>
+
+<!-- GAME SECTIONS -->
 <div class="game-section" id="pong">
-  <h1>Pong</h1>
-  <div class="gear-button" onclick="backToUI()">↩</div>
-  <canvas id="pongCanvas" width="300" height="200"></canvas>
-  <p id="pongScore" style="color:#0ff;font-size:1.2rem;">Score: 0</p>
+<h1>Pong</h1>
+<canvas id="pongCanvas" width="300" height="200"></canvas>
+<p id="pongScore" style="color:#0ff;font-size:1.2rem;">Score:0</p>
 </div>
 
-<!-- SPACE INVADERS -->
 <div class="game-section" id="spaceinvaders">
-  <h1>Space Invaders</h1>
-  <div class="gear-button" onclick="backToUI()">↩</div>
-  <canvas id="spaceCanvas" width="300" height="200"></canvas>
+<h1>Space Invaders</h1>
+<canvas id="spaceCanvas" width="300" height="200"></canvas>
+<p id="siScore" style="color:#0ff;font-size:1.2rem;">Score:0</p>
 </div>
 
-<!-- PAC‑MAN -->
 <div class="game-section" id="pacman">
-  <h1>Pac‑Man</h1>
-  <div class="gear-button" onclick="backToUI()">↩</div>
-  <canvas id="pacCanvas" width="300" height="200"></canvas>
-  <p id="pacScore" style="color:#0ff;font-size:1.2rem;">Score: 0</p>
+<h1>Pac‑Man</h1>
+<canvas id="pacCanvas" width="300" height="200"></canvas>
+<p id="pacScore" style="color:#0ff;font-size:1.2rem;">Score:0</p>
 </div>
 
-<!-- SNAKE -->
 <div class="game-section" id="snake">
-  <h1>Snake</h1>
-  <div class="gear-button" onclick="backToUI()">↩</div>
-  <canvas id="snakeCanvas" width="300" height="200"></canvas>
-  <p id="snakeScore" style="color:#0ff;font-size:1.2rem;">Score: 0</p>
+<h1>Snake</h1>
+<canvas id="snakeCanvas" width="300" height="200"></canvas>
+<p id="snakeScore" style="color:#0ff;font-size:1.2rem;">Score:0</p>
 </div>
 
-<!-- FLAPPY BIRD -->
 <div class="game-section" id="flappy">
-  <h1>Flappy Bird</h1>
-  <div class="gear-button" onclick="backToUI()">↩</div>
-  <canvas id="flappyCanvas" width="300" height="400"></canvas>
-  <p id="flappyScore" style="color:#0ff;font-size:1.2rem;">Score: 0</p>
+<h1>Flappy Bird</h1>
+<canvas id="flappyCanvas" width="300" height="400"></canvas>
+<p id="flappyScore" style="color:#0ff;font-size:1.2rem;">Score:0</p>
 </div>
 
-<!-- CALCULATOR -->
 <div class="game-section" id="calculator">
-  <h1>AI Calculator</h1>
-  <div class="gear-button" onclick="backToUI()">↩</div>
-  <input type="text" id="calcInput" placeholder="Type e.g. 6*7">
-  <button onclick="solveMath()">Solve</button>
-  <p id="calcOutput"></p>
+<h1>AI Calculator</h1>
+<input type="text" id="calcInput" placeholder="Type e.g. 6*7">
+<button onclick="solveMath()">Solve</button>
+<p id="calcOutput"></p>
 </div>
 
 <script>
-/* ------------------ UI NAVIGATION ------------------ */
-function openGame(id) {
-  document.getElementById('main-ui').style.display = 'none';
-  document.querySelectorAll('.game-section').forEach(s => s.style.display = 'none');
-  document.getElementById(id).style.display = 'flex';
-}
-function backToUI() {
-  document.getElementById('main-ui').style.display = 'block';
-  document.querySelectorAll('.game-section').forEach(s => s.style.display = 'none');
-}
+/* ------------------ UI NAV ------------------ */
+function openGame(id){document.getElementById('main-ui').style.display='none';document.querySelectorAll('.game-section').forEach(s=>s.style.display='none');document.getElementById(id).style.display='flex';}
+function backToUI(){document.getElementById('main-ui').style.display='block';document.querySelectorAll('.game-section').forEach(s=>s.style.display='none');}
 
-/* ------------------ GRID BACKGROUND ------------------ */
-const grid = document.getElementById('gridCanvas');
-const gx = grid.getContext('2d');
-function resizeGrid() {grid.width=window.innerWidth;grid.height=window.innerHeight;}
-window.addEventListener('resize', resizeGrid);
-resizeGrid();
-let offset = 0;
-function drawGrid() {
-  gx.clearRect(0,0,grid.width,grid.height);
-  gx.strokeStyle='#0ff'; gx.lineWidth=1;
-  for(let x=0;x<grid.width;x+=40){
-    gx.beginPath();gx.moveTo(x,offset%40);gx.lineTo(x,grid.height);gx.stroke();
-  }
-  for(let y=0;y<grid.height;y+=40){
-    gx.beginPath();gx.moveTo(0,y+offset%40);gx.lineTo(grid.width,y+offset%40);gx.stroke();
-  }
-  offset+=0.5;
-  requestAnimationFrame(drawGrid);
-}
+/* ------------------ GRID ------------------ */
+const grid=document.getElementById('gridCanvas');const gx=grid.getContext('2d');function resizeGrid(){grid.width=window.innerWidth;grid.height=window.innerHeight;}
+window.addEventListener('resize',resizeGrid);resizeGrid();
+let offset=0;function drawGrid(){gx.clearRect(0,0,grid.width,grid.height);gx.strokeStyle='#0ff';gx.lineWidth=1;
+for(let x=0;x<grid.width;x+=40){gx.beginPath();gx.moveTo(x,offset%40);gx.lineTo(x,grid.height);gx.stroke();}
+for(let y=0;y<grid.height;y+=40){gx.beginPath();gx.moveTo(0,y+offset%40);gx.lineTo(grid.width,y+offset%40);gx.stroke();}
+offset+=0.5;requestAnimationFrame(drawGrid);}
 drawGrid();
 
 /* ------------------ CALCULATOR ------------------ */
-function solveMath() {
-  const input = document.getElementById('calcInput').value;
-  let answer;
-  try { answer = eval(input); }
-  catch { answer = 'Error'; }
-  document.getElementById('calcOutput').textContent = answer + " HEMMY BOY";
-}
+function solveMath(){let input=document.getElementById('calcInput').value;let ans;try{ans=eval(input);}catch(e){ans='Error';}document.getElementById('calcOutput').textContent=ans+" HEMMY BOY";}
 
-/* ----------- FULL GAME LOGIC BELOW ----------- */
-
-/* -------- PONG -------- */
-const pCanvas = document.getElementById('pongCanvas');
-const pCtx = pCanvas.getContext('2d');
-let pScore = 0;
-let px = pCanvas.width/2, py = pCanvas.height/2, pdx = 3, pdy = 3, paddleY = pCanvas.height/2 - 30;
-function drawPong() {
-  pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
-  pCtx.fillStyle = "#0ff";
-  pCtx.fillRect(0, paddleY, 10, 60);
-  pCtx.beginPath(); pCtx.arc(px, py, 7, 0, Math.PI*2); pCtx.fillStyle="#ff0"; pCtx.fill(); pCtx.closePath();
-  px += pdx; py += pdy;
-  if(py < 7 || py > pCanvas.height-7) pdy = -pdy;
-  if(px > pCanvas.width-7) pdx = -pdx;
-  if(px < 17 && py > paddleY && py < paddleY+60) { pdx = -pdx; pScore++; }
-  if(px < 0) { px = pCanvas.width/2; py=pCanvas.height/2; pScore=0; }
-  document.getElementById('pongScore').textContent = "Score: " + pScore;
-  requestAnimationFrame(drawPong);
-}
-pCanvas.addEventListener('touchmove', e => {
-  paddleY = e.touches[0].clientY - pCanvas.getBoundingClientRect().top - 30;
-});
-pCanvas.addEventListener('mousemove', e => {
-  paddleY = e.clientY - pCanvas.getBoundingClientRect().top - 30;
-});
+/* ------------------ PONG ------------------ */
+const pCanvas=document.getElementById('pongCanvas');const pCtx=pCanvas.getContext('2d');let pScore=0;let px=pCanvas.width/2,py=pCanvas.height/2,pdx=3,pdy=3,paddleY=pCanvas.height/2-30;
+function drawPong(){pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);pCtx.fillStyle="#0ff";pCtx.fillRect(0,paddleY,10,60);
+pCtx.beginPath();pCtx.arc(px,py,7,0,Math.PI*2);pCtx.fillStyle="#ff0";pCtx.fill();pCtx.closePath();
+px+=pdx;py+=pdy;if(py<7||py>pCanvas.height-7)pdy=-pdy;if(px>pCanvas.width-7)pdx=-pdx;
+if(px<17&&py>paddleY&&py<paddleY+60){pdx=-pdx;pScore++;}if(px<0){px=pCanvas.width/2;py=pCanvas.height/2;pScore=0;}
+document.getElementById('pongScore').textContent="Score:"+pScore;requestAnimationFrame(drawPong);}
+pCanvas.addEventListener('touchmove',e=>{paddleY=e.touches[0].clientY-pCanvas.getBoundingClientRect().top-30;});
+pCanvas.addEventListener('mousemove',e=>{paddleY=e.clientY-pCanvas.getBoundingClientRect().top-30;});
 drawPong();
 
-/* -------- SNAKE -------- */
-const sCanvas = document.getElementById('snakeCanvas');
-const sCtx = sCanvas.getContext('2d');
-let snSize = 10, snDir='RIGHT', snBody=[{x:50,y:50}], food={x:100,y:80}, snScore=0;
-function moveSnake() {
-  let head = {...snBody[0]};
-  if(snDir==='LEFT') head.x-=snSize;
-  if(snDir==='RIGHT') head.x+=snSize;
-  if(snDir==='UP') head.y-=snSize;
-  if(snDir==='DOWN') head.y+=snSize;
-  snBody.unshift(head);
-  if(head.x===food.x && head.y===food.y){ snScore+=1; food={x:Math.floor(Math.random()*29)*snSize,y:Math.floor(Math.random()*19)*snSize}; }
-  else snBody.pop();
-  if(head.x<0||head.x>=sCanvas.width||head.y<0||head.y>=sCanvas.height) snBody=[{x:50,y:50}], snScore=0;
-}
-function drawSnake() {
-  sCtx.clearRect(0,0,sCanvas.width,sCanvas.height);
-  sCtx.fillStyle="#0ff"; snBody.forEach(b=>sCtx.fillRect(b.x,b.y,snSize,snSize));
-  sCtx.fillStyle="#ff0"; sCtx.fillRect(food.x,food.y,snSize,snSize);
-  document.getElementById('snakeScore').textContent = "Score: " + snScore;
-  moveSnake();
-  requestAnimationFrame(drawSnake);
-}
+/* ------------------ SNAKE ------------------ */
+const sCanvas=document.getElementById('snakeCanvas');const sCtx=sCanvas.getContext('2d');
+let snSize=10,snDir='RIGHT',snBody=[{x:50,y:50}],food={x:100,y:80},snScore=0;
+function moveSnake(){let head={...snBody[0]};if(snDir==='LEFT')head.x-=snSize;if(snDir==='RIGHT')head.x+=snSize;if(snDir==='UP')head.y-=snSize;if(snDir==='DOWN')head.y+=snSize;
+snBody.unshift(head);if(head.x===food.x&&head.y===food.y){snScore+=1;food={x:Math.floor(Math.random()*29)*snSize,y:Math.floor(Math.random()*19)*snSize};}else snBody.pop();
+if(head.x<0||head.x>=sCanvas.width||head.y<0||head.y>=sCanvas.height||snBody.slice(1).some(b=>b.x===head.x&&b.y===head.y)){snBody=[{x:50,y:50}];snScore=0;}}
+function drawSnake(){sCtx.clearRect(0,0,sCanvas.width,sCanvas.height);sCtx.fillStyle="#0ff";snBody.forEach(b=>sCtx.fillRect(b.x,b.y,snSize,snSize));
+sCtx.fillStyle="#ff0";sCtx.fillRect(food.x,food.y,snSize,snSize);document.getElementById('snakeScore').textContent="Score:"+snScore;
+moveSnake();requestAnimationFrame(drawSnake);}
 drawSnake();
-document.addEventListener('keydown', e => {
-  if(e.key==='ArrowUp' && snDir!=='DOWN') snDir='UP';
-  if(e.key==='ArrowDown' && snDir!=='UP') snDir='DOWN';
-  if(e.key==='ArrowLeft' && snDir!=='RIGHT') snDir='LEFT';
-  if(e.key==='ArrowRight' && snDir!=='LEFT') snDir='RIGHT';
-});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowUp'&&snDir!=='DOWN')snDir='UP';if(e.key==='ArrowDown'&&snDir!=='UP')snDir='DOWN';
+if(e.key==='ArrowLeft'&&snDir!=='RIGHT')snDir='LEFT';if(e.key==='ArrowRight'&&snDir!=='LEFT')snDir='RIGHT';});
+sCanvas.addEventListener('touchstart',e=>{const t=e.touches[0];if(t.clientX<sCanvas.width/2)snDir='LEFT';else snDir='RIGHT';});
 
-/* -------- FLAPPY BIRD -------- */
-const fCanvas=document.getElementById('flappyCanvas');
-const fCtx=fCanvas.getContext('2d');
-let bird={x:50,y:200,dy:0}, gravity=0.6, pipes=[], flScore=0;
-function drawFlappy() {
-  fCtx.clearRect(0,0,fCanvas.width,fCanvas.height);
-  bird.dy += gravity; bird.y += bird.dy;
-  fCtx.fillStyle="#ff0"; fCtx.beginPath(); fCtx.arc(bird.x,bird.y,10,0,Math.PI*2); fCtx.fill();
-  if(frameCount%90===0){ let topH = Math.random()*100+30; pipes.push({x:fCanvas.width,top:topH}); }
-  pipes.forEach(p => {p.x -=2; fCtx.fillStyle="#0f0"; fCtx.fillRect(p.x,0,20,p.top); fCtx.fillRect(p.x,p.top+80,20,fCanvas.height - (p.top+80));});
-  pipes = pipes.filter(p=>p.x+20>0);
-  if(bird.y>fCanvas.height || bird.y<0) {bird.y=200; pipes=[]; flScore=0;}
-  document.getElementById('flappyScore').textContent = "Score: " + flScore;
-  frameCount++; requestAnimationFrame(drawFlappy);
-}
-let frameCount=0;
-fCanvas.addEventListener('touchstart', ()=>bird.dy=-10);
-document.addEventListener('keydown', e=> { if(e.key===' ') bird.dy=-10; });
+/* ------------------ FLAPPY ------------------ */
+const fCanvas=document.getElementById('flappyCanvas');const fCtx=fCanvas.getContext('2d');
+let bird={x:50,y:200,dy:0},gravity=0.6,pipes=[],flScore=0,fFrame=0;
+function drawFlappy(){fCtx.clearRect(0,0,fCanvas.width,fCanvas.height);
+bird.dy+=gravity; bird.y+=bird.dy;
+if(fFrame%90===0){let topH=Math.random()*100+30;pipes.push({x:fCanvas.width,top:topH});}
+pipes.forEach(p=>{p.x-=2;fCtx.fillStyle="#0f0";fCtx.fillRect(p.x,0,20,p.top);fCtx.fillRect(p.x,p.top+80,20,fCanvas.height-(p.top+80));});
+pipes=pipes.filter(p=>p.x+20>0);
+pipes.forEach(p=>{if(bird.x+10>p.x && bird.x-10<p.x+20 && (bird.y-10<p.top || bird.y+10>p.top+80)) bird.y=200,bird.dy=0,pipes=[],flScore=0;});
+if(bird.y>fCanvas.height||bird.y<0){bird.y=200;bird.dy=0;pipes=[];flScore=0;}
+pipes.forEach(p=>{if(p.x+20<bird.x)flScore++;});
+document.getElementById('flappyScore').textContent="Score:"+flScore;fFrame++;requestAnimationFrame(drawFlappy);}
+fCanvas.addEventListener('touchstart',()=>bird.dy=-10);
+document.addEventListener('keydown',e=>{if(e.key===' ')bird.dy=-10;});
 drawFlappy();
 
-/* -------- SPACE INVADERS -------- */
-const siCanvas=document.getElementById('spaceCanvas');
-const siCtx=siCanvas.getContext('2d');
-let ship={x:130,y:180}, bulletsSI=[], invaders=[];
-for(let i=0;i<5;i++) for(let j=0;j<3;j++) invaders.push({x:30+i*50,y:20+j*30});
-function drawSI(){
-  siCtx.clearRect(0,0,siCanvas.width,siCanvas.height);
-  siCtx.fillStyle="#0ff"; siCtx.fillRect(ship.x,ship.y,40,10);
-  siCtx.fillStyle="#ff0"; bulletsSI.forEach(b=>{b.y-=5; siCtx.fillRect(b.x,b.y,4,10);});
-  bulletsSI = bulletsSI.filter(b=>b.y>0);
-  siCtx.fillStyle="#0f0"; invaders.forEach(inv=>siCtx.fillRect(inv.x,inv.y,30,20));
-  requestAnimationFrame(drawSI);
-}
-document.addEventListener('keydown', e=>{
-  if(e.key==='ArrowLeft') ship.x-=5;
-  if(e.key==='ArrowRight') ship.x+=5;
-  if(e.key===' ') bulletsSI.push({x:ship.x+18,y:ship.y});
-});
+/* ------------------ SPACE INVADERS ------------------ */
+const siCanvas=document.getElementById('spaceCanvas');const siCtx=siCanvas.getContext('2d');
+let ship={x:130,y:180},bullets=[],invaders=[],siScore=0;
+for(let i=0;i<5;i++)for(let j=0;j<3;j++)invaders.push({x:30+i*50,y:20+j*30,alive:true});
+function drawSI(){siCtx.clearRect(0,0,siCanvas.width,siCanvas.height);siCtx.fillStyle="#0ff";siCtx.fillRect(ship.x,ship.y,40,10);
+siCtx.fillStyle="#ff0";bullets.forEach(b=>{b.y-=5;siCtx.fillRect(b.x,b.y,4,10);});
+bullets=bullets.filter(b=>b.y>0);
+invaders.forEach(inv=>{if(inv.alive){siCtx.fillStyle="#0f0";siCtx.fillRect(inv.x,inv.y,30,20);}}); 
+bullets.forEach(b=>{invaders.forEach(inv=>{if(inv.alive && b.x<b.x+30 && b.x+4>inv.x && b.y<b.y+10 && b.y+10>inv.y){inv.alive=false;siScore+=1; b.y=-10;}});});
+document.getElementById('siScore').textContent="Score:"+siScore;requestAnimationFrame(drawSI);}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')ship.x-=5;if(e.key==='ArrowRight')ship.x+=5;if(e.key===' ')bullets.push({x:ship.x+18,y:ship.y});});
 drawSI();
 
-/* -------- PACMAN WITH GHOSTS -------- */
-const pmCanvas=document.getElementById('pacCanvas');
-const pmCtx=pmCanvas.getContext('2d');
-// Simple grid dots and two chasing ghosts
-let pac={x:20,y:20,dir:'RIGHT',score:0}, ghosts=[{x:280,y:180,dx:-1,dy:0},{x:280,y:20,dx:0,dy:1}], dots=[];
-for(let i=20;i<300;i+=20) for(let j=20;j<180;j+=20) dots.push({x:i,y:j});
-function movePac(){
-  if(pac.dir==='LEFT') pac.x-=2;
-  if(pac.dir==='RIGHT') pac.x+=2;
-  if(pac.dir==='UP') pac.y-=2;
-  if(pac.dir==='DOWN') pac.y+=2;
-  dots = dots.filter(d=>!(Math.abs(d.x-pac.x)<8 && Math.abs(d.y-pac.y)<8)?true:false) || [];
-  pac.score = (300- dots.length/1);
-}
-function moveGhosts(){
-  ghosts.forEach(g=>{
-    g.x += g.dx; g.y += g.dy;
-    if(g.x<0||g.x>pmCanvas.width) g.dx=-g.dx;
-    if(g.y<0||g.y>pmCanvas.height) g.dy=-g.dy;
-  });
-}
-function drawPacman(){
-  pmCtx.clearRect(0,0,pmCanvas.width,pmCanvas.height);
-  pmCtx.fillStyle="#ff0"; pmCtx.beginPath(); pmCtx.arc(pac.x,pac.y,10,0.25*Math.PI,1.75*Math.PI); pmCtx.lineTo(pac.x,pac.y); pmCtx.fill();
-  pmCtx.fillStyle="#0ff"; dots.forEach(d=> pmCtx.fillRect(d.x,d.y,4,4));
-  pmCtx.fillStyle="#f00"; ghosts.forEach(g=> pmCtx.fillRect(g.x,g.y,12,12));
-  document.getElementById('pacScore').textContent="Score: "+pac.score;
-  movePac(); moveGhosts();
-  requestAnimationFrame(drawPacman);
-}
+/* ------------------ PACMAN ------------------ */
+const pmCanvas=document.getElementById('pacCanvas');const pmCtx=pmCanvas.getContext('2d');
+const tile=20;let pac={x:20,y:20,dir:'RIGHT',score:0},ghosts=[{x:280,y:180,dx:-1,dy:0},{x:280,y:20,dx:0,dy:1}],dots=[];
+for(let i=20;i<300;i+=tile)for(let j=20;j<180;j+=tile)dots.push({x:i,y:j});
+function movePac(){if(pac.dir==='LEFT')pac.x-=2;if(pac.dir==='RIGHT')pac.x+=2;if(pac.dir==='UP')pac.y-=2;if(pac.dir==='DOWN')pac.y+=2;
+dots=dots.filter(d=>!(Math.abs(d.x-pac.x)<8 && Math.abs(d.y-pac.y)<8));pac.score=300-Math.floor(dots.length/1);}
+function moveGhosts(){ghosts.forEach(g=>{g.x+=g.dx;g.y+=g.dy;if(g.x<0||g.x>pmCanvas.width)g.dx=-g.dx;if(g.y<0||g.y>pmCanvas.height)g.dy=-g.dy;
+if(Math.abs(pac.x-g.x)<12&&Math.abs(pac.y-g.y)<12){pac.x=20;pac.y=20;pac.score=0;dots=[];for(let i=20;i<300;i+=tile)for(let j=20;j<180;j+=tile)dots.push({x:i,y:j});}});}
+function drawPacman(){pmCtx.clearRect(0,0,pmCanvas.width,pmCanvas.height);pmCtx.fillStyle="#ff0";pmCtx.beginPath();
+pmCtx.arc(pac.x,pac.y,10,0.25*Math.PI,1.75*Math.PI);pmCtx.lineTo(pac.x,pac.y);pmCtx.fill();pmCtx.fillStyle="#0ff";dots.forEach(d=>pmCtx.fillRect(d.x,d.y,4,4));
+pmCtx.fillStyle="#f00";ghosts.forEach(g=>pmCtx.fillRect(g.x,g.y,12,12));document.getElementById('pacScore').textContent="Score:"+pac.score;
+movePac();moveGhosts();requestAnimationFrame(drawPacman);}
 drawPacman();
-document.addEventListener('keydown', e=>{
-  if(e.key==='ArrowUp') pac.dir='UP';
-  if(e.key==='ArrowDown') pac.dir='DOWN';
-  if(e.key==='ArrowLeft') pac.dir='LEFT';
-  if(e.key==='ArrowRight') pac.dir='RIGHT';
-});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowUp')pac.dir='UP';if(e.key==='ArrowDown')pac.dir='DOWN';
+if(e.key==='ArrowLeft')pac.dir='LEFT';if(e.key==='ArrowRight')pac.dir='RIGHT';});
 </script>
 </body>
 </html>
