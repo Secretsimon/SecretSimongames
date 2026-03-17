@@ -2,108 +2,77 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arcade Hub v4.0 GOD MODE</title>
+<title>Arcade Hub v4.1</title>
 
 <style>
-body{
-margin:0;
-background:#050510;
-color:#0ff;
-font-family:sans-serif;
-text-align:center;
-}
-
+body{margin:0;background:#050510;color:#0ff;font-family:sans-serif;text-align:center;}
 h1{text-shadow:0 0 20px #0ff;}
-
-.bubbles{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:12px;
-}
-
-.bubble{
-width:100px;height:100px;
-border-radius:50%;
-background:#111;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-box-shadow:0 0 15px #0ff;
-transition:.2s;
-}
-.bubble:hover{transform:scale(1.1);box-shadow:0 0 30px #0ff;}
-
-canvas{background:#000;margin:auto;display:block;max-width:95%;}
+.bubbles{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}
+.bubble{width:95px;height:95px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 15px #0ff;}
+canvas{background:#000;max-width:95%;display:block;margin:auto;}
 .section{display:none;}
+button{margin:5px;padding:10px;background:#111;color:#0ff;border:1px solid #0ff;}
 #version{position:fixed;top:5px;right:10px;}
-
-button{padding:10px;margin:5px;background:#111;color:#0ff;border:1px solid #0ff;}
 </style>
 </head>
 
 <body>
 
-<div id="version">v4.0 GOD MODE</div>
+<div id="version">v4.1</div>
 
 <div id="menu">
 <h1>Welcome to my Kingdom</h1>
-
 <div class="bubbles">
 <div class="bubble" onclick="openGame('snake')">Snake</div>
-<div class="bubble" onclick="openGame('breakout')">Breakout</div>
+<div class="bubble" onclick="openGame('pong')">Pong</div>
 <div class="bubble" onclick="openGame('flappy')">Flappy</div>
+<div class="bubble" onclick="openGame('breakout')">Breakout</div>
 <div class="bubble" onclick="openGame('tetris')">Tetris</div>
 <div class="bubble" onclick="openGame('doodle')">Doodle</div>
+<div class="bubble" onclick="openGame('clicker')">Clicker</div>
+<div class="bubble" onclick="openGame('reaction')">Reaction</div>
+<div class="bubble" onclick="openGame('calc')">Calc</div>
+<div class="bubble" onclick="openGame('magic')">8Ball</div>
+<div class="bubble" onclick="openGame('credits')">Credits</div>
 </div>
 </div>
 
 <button onclick="back()">⬅ Menu</button>
 
-<!-- SECTIONS -->
-<div id="snake" class="section">
-<canvas id="s" width="400" height="400"></canvas>
-<h3 id="ss"></h3>
-<h4 id="sh"></h4>
-<button onclick="resetSnake()">Restart</button>
+<!-- GAME SECTIONS -->
+<div id="snake" class="section"><canvas id="s" width="400" height="400"></canvas><h3 id="ss"></h3></div>
+<div id="pong" class="section"><canvas id="p" width="400" height="400"></canvas></div>
+<div id="flappy" class="section"><canvas id="f" width="300" height="500"></canvas><h3 id="fs"></h3></div>
+<div id="breakout" class="section"><canvas id="b" width="400" height="400"></canvas><h3 id="bs"></h3></div>
+<div id="tetris" class="section"><canvas id="t" width="200" height="400"></canvas></div>
+<div id="doodle" class="section"><canvas id="d" width="300" height="500"></canvas></div>
+
+<div id="clicker" class="section">
+<h1 id="money">0</h1>
+<button onclick="money++;updateMoney()">Tap</button>
 </div>
 
-<div id="breakout" class="section">
-<canvas id="b" width="400" height="400"></canvas>
-<h3 id="bs"></h3>
-<h4 id="bh"></h4>
-<button onclick="resetBreakout()">Restart</button>
+<div id="reaction" class="section">
+<h2 id="react">Press Start</h2>
+<button onclick="startReaction()">Start</button>
 </div>
 
-<div id="flappy" class="section">
-<canvas id="f" width="300" height="500"></canvas>
-<h3 id="fs"></h3>
-<h4 id="fh"></h4>
-<button onclick="resetFlappy()">Restart</button>
+<div id="calc" class="section">
+<input id="ci">
+<button onclick="co.innerText=eval(ci.value)+' HEMMY BOY'">=</button>
+<h2 id="co"></h2>
 </div>
 
-<div id="tetris" class="section">
-<canvas id="t" width="200" height="400"></canvas>
-<button onclick="resetTetris()">Restart</button>
+<div id="magic" class="section">
+<button onclick="magic()">Ask</button>
+<h2 id="ma"></h2>
 </div>
 
-<div id="doodle" class="section">
-<canvas id="d" width="300" height="500"></canvas>
-<button onclick="resetDoodle()">Restart</button>
+<div id="credits" class="section">
+<h2>Me and Jed are terking off</h2>
 </div>
 
 <script>
-// 🔊 SIMPLE SOUND
-function beep(freq=200,dur=0.1){
-let ctx=new AudioContext();
-let osc=ctx.createOscillator();
-osc.frequency.value=freq;
-osc.connect(ctx.destination);
-osc.start();
-osc.stop(ctx.currentTime+dur);
-}
-
 // NAV
 function openGame(id){
 menu.style.display='none';
@@ -115,39 +84,24 @@ menu.style.display='block';
 document.querySelectorAll('.section').forEach(s=>s.style.display='none');
 }
 
-// 💾 SAVE
-function save(key,val){localStorage.setItem(key,val);}
-function load(key){return localStorage.getItem(key)||0;}
+// SIMPLE SOUND
+function beep(f=200){let a=new AudioContext(),o=a.createOscillator();o.frequency.value=f;o.connect(a.destination);o.start();o.stop(a.currentTime+.1);}
 
-// ---------- SNAKE ----------
+// ---------------- SNAKE ----------------
 let sctx=s.getContext('2d');
-let snake,dir,food,score;
-
-function resetSnake(){
-snake=[[80,80],[60,80],[40,80],[20,80]];
-dir=[20,0];
-food=[200,200];
-score=0;
-}
-resetSnake();
+let snake=[[80,80],[60,80],[40,80],[20,80]],dir=[20,0],food=[200,200],score=0;
 
 setInterval(()=>{
 let head=[snake[0][0]+dir[0],snake[0][1]+dir[1]];
-
 if(head[0]<0||head[1]<0||head[0]>=400||head[1]>=400 ||
 snake.some(p=>p[0]==head[0]&&p[1]==head[1])){
-beep(100);
-resetSnake();
-return;
+snake=[[80,80],[60,80],[40,80],[20,80]];score=0;
 }
-
 snake.unshift(head);
 
 if(head[0]==food[0]&&head[1]==food[1]){
-score++;
-beep(400);
+score++;beep(400);
 food=[Math.floor(Math.random()*20)*20,Math.floor(Math.random()*20)*20];
-if(score>load("snakeHigh")) save("snakeHigh",score);
 }else snake.pop();
 
 sctx.clearRect(0,0,400,400);
@@ -155,69 +109,36 @@ snake.forEach(p=>sctx.fillRect(p[0],p[1],20,20));
 sctx.fillStyle="yellow";sctx.fillRect(food[0],food[1],20,20);
 
 ss.innerText="Score: "+score;
-sh.innerText="High: "+load("snakeHigh");
 },120);
 
 onkeydown=e=>{
-if(e.key=="ArrowUp"&&dir[1]!=20)dir=[0,-20];
-if(e.key=="ArrowDown"&&dir[1]!=-20)dir=[0,20];
-if(e.key=="ArrowLeft"&&dir[0]!=20)dir=[-20,0];
-if(e.key=="ArrowRight"&&dir[0]!=-20)dir=[20,0];
+if(e.key=="ArrowUp")dir=[0,-20];
+if(e.key=="ArrowDown")dir=[0,20];
+if(e.key=="ArrowLeft")dir=[-20,0];
+if(e.key=="ArrowRight")dir=[20,0];
 };
 
-// ---------- BREAKOUT ----------
-let bctx=b.getContext('2d');
-let bx,by,dx,dy,pad,bricks,bscore;
-
-function resetBreakout(){
-bx=200;by=200;dx=3;dy=3;pad=150;bscore=0;
-bricks=[];
-for(let i=0;i<5;i++)for(let j=0;j<8;j++)bricks.push({x:j*50,y:i*20,alive:1});
+// ---------------- PONG ----------------
+let pctx=p.getContext('2d');
+let px=200,py=200,pdx=3,pdy=3,ppad=150;
+function pong(){
+pctx.clearRect(0,0,400,400);
+pctx.fillRect(ppad,380,80,10);
+pctx.beginPath();pctx.arc(px,py,8,0,7);pctx.fill();
+px+=pdx;py+=pdy;
+if(px<0||px>400)pdx*=-1;
+if(py<0)pdy*=-1;
+if(py>380&&px>ppad&&px<ppad+80)pdy*=-1;
+requestAnimationFrame(pong);
 }
-resetBreakout();
+pong();
+p.onmousemove=e=>ppad=e.offsetX;
 
-function breakout(){
-bctx.clearRect(0,0,400,400);
-
-bctx.fillRect(pad,380,80,10);
-bctx.beginPath();bctx.arc(bx,by,8,0,7);bctx.fill();
-
-bx+=dx;by+=dy;
-
-if(bx<0||bx>400)dx*=-1;
-if(by<0)dy*=-1;
-if(by>400){beep(80);resetBreakout();}
-
-if(by>380&&bx>pad&&bx<pad+80){dy*=-1;beep(200);}
-
-bricks.forEach(br=>{
-if(br.alive){
-bctx.fillRect(br.x,br.y,40,10);
-if(bx>br.x&&bx<br.x+40&&by>br.y&&by<br.y+10){
-br.alive=0;dy*=-1;bscore++;beep(500);
-if(bscore>load("breakHigh")) save("breakHigh",bscore);
-}
-}
-});
-
-bs.innerText="Score: "+bscore;
-bh.innerText="High: "+load("breakHigh");
-
-requestAnimationFrame(breakout);
-}
-breakout();
-b.onmousemove=e=>pad=e.offsetX;
-
-// ---------- FLAPPY ----------
-let fy,fv,pipes,fscore;
-
-function resetFlappy(){fy=200;fv=0;pipes=[];fscore=0;}
-resetFlappy();
-
+// ---------------- FLAPPY ----------------
+let fy=200,fv=0,pipes=[],fscore=0;
 function flappy(){
 let c=f.getContext('2d');
 c.clearRect(0,0,300,500);
-
 fv+=0.5;fy+=fv;
 
 if(Math.random()<.02)pipes.push({x:300,g:Math.random()*200,passed:false});
@@ -227,87 +148,93 @@ p.x-=2;
 c.fillRect(p.x,0,30,p.g);
 c.fillRect(p.x,p.g+120,30,500);
 
-if(!p.passed && p.x<50){fscore++;p.passed=true;beep(400);}
+if(!p.passed && p.x<50){fscore++;p.passed=true;beep(300);}
+
 if(50>p.x&&50<p.x+30&&(fy<p.g||fy>p.g+120)){
-beep(100);resetFlappy();
+fy=200;fscore=0;
 }
 });
 
 c.beginPath();c.arc(50,fy,10,0,7);c.fill();
-
 fs.innerText="Score: "+fscore;
-
 requestAnimationFrame(flappy);
 }
 flappy();
-onclick=()=>{fv=-8;beep(300);};
+onclick=()=>fv=-8;
 
-// ---------- TETRIS ----------
-let tctx=t.getContext('2d');
-let grid,piece;
+// ---------------- BREAKOUT ----------------
+let bctx=b.getContext('2d');
+let bx=200,by=200,bdx=3,bdy=3,pad=150,bricks=[],bscore=0;
 
-function resetTetris(){
-grid=Array.from({length:20},()=>Array(10).fill(0));
-piece={x:4,y:0};
+for(let i=0;i<5;i++)for(let j=0;j<8;j++)bricks.push({x:j*50,y:i*20,alive:1});
+
+function breakout(){
+bctx.clearRect(0,0,400,400);
+bctx.fillRect(pad,380,80,10);
+bctx.beginPath();bctx.arc(bx,by,8,0,7);bctx.fill();
+
+bx+=bdx;by+=bdy;
+
+if(bx<0||bx>400)bdx*=-1;
+if(by<0)bdy*=-1;
+if(by>380&&bx>pad&&bx<pad+80)bdy*=-1;
+
+bricks.forEach(br=>{
+if(br.alive){
+bctx.fillRect(br.x,br.y,40,10);
+if(bx>br.x&&bx<br.x+40&&by>br.y&&by<br.y+10){
+br.alive=0;bdy*=-1;bscore++;beep(500);
 }
-resetTetris();
-
-setInterval(()=>{
-piece.y++;
-if(piece.y>=20||grid[piece.y][piece.x]){
-grid[piece.y-1][piece.x]=1;
-piece={x:4,y:0};
 }
-for(let y=19;y>=0;y--){
-if(grid[y].every(v=>v)){
-grid.splice(y,1);
-grid.unshift(Array(10).fill(0));
-beep(600);
-}
-}
-drawT();
-},300);
-
-function drawT(){
-tctx.clearRect(0,0,200,400);
-for(let y=0;y<20;y++)
-for(let x=0;x<10;x++)
-if(grid[y][x])tctx.fillRect(x*20,y*20,20,20);
-tctx.fillRect(piece.x*20,piece.y*20,20,20);
-}
-
-// ---------- DOODLE ----------
-let dctx=d.getContext('2d');
-let player,plats;
-
-function resetDoodle(){
-player={x:150,y:400,vy:-10};
-plats=[];
-for(let i=0;i<6;i++)plats.push({x:Math.random()*250,y:i*80});
-}
-resetDoodle();
-
-function doodle(){
-dctx.clearRect(0,0,300,500);
-
-player.vy+=0.4;
-player.y+=player.vy;
-
-plats.forEach(p=>{
-p.y+=1;
-dctx.fillRect(p.x,p.y,60,10);
-
-if(player.y+20>p.y&&player.y<p.y&&player.x>p.x&&player.x<p.x+60){
-player.vy=-10;beep(300);
-}
-if(p.y>500){p.y=0;p.x=Math.random()*250;}
 });
 
-dctx.fillRect(player.x,player.y,20,20);
+bs.innerText="Score: "+bscore;
+requestAnimationFrame(breakout);
+}
+breakout();
+b.onmousemove=e=>pad=e.offsetX;
 
+// ---------------- TETRIS ----------------
+let tctx=t.getContext('2d');
+let ty=0;
+setInterval(()=>{
+tctx.clearRect(0,0,200,400);
+tctx.fillRect(80,ty,20,20);
+ty+=20;if(ty>400)ty=0;
+},300);
+
+// ---------------- DOODLE ----------------
+let dctx=d.getContext('2d');
+let dy=400,vy=-10;
+function doodle(){
+dctx.clearRect(0,0,300,500);
+vy+=0.4;dy+=vy;
+if(dy>480)vy=-12;
+dctx.fillRect(140,dy,20,20);
 requestAnimationFrame(doodle);
 }
 doodle();
+
+// ---------------- CLICKER ----------------
+let money=0;
+function updateMoney(){moneyDisplay.innerText=money;}
+
+// ---------------- REACTION ----------------
+function startReaction(){
+react.innerText="Wait...";
+setTimeout(()=>{
+react.innerText="CLICK!";
+let t=Date.now();
+document.onclick=()=>react.innerText=(Date.now()-t)+" ms";
+},Math.random()*2000+1000);
+}
+
+// ---------------- MAGIC ----------------
+function magic(){
+let arr=["Yes","No","Maybe"];
+ma.innerText=arr[Math.floor(Math.random()*3)]+" HEMMY 😂🫱";
+}
 </script>
+
 </body>
 </html>
