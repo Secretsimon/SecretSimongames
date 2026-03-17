@@ -38,20 +38,20 @@ button{margin:5px;padding:10px;background:#111;color:#0ff;border:1px solid #0ff;
 <div id="snake" class="section">
 <canvas id="s" width="400" height="400"></canvas>
 <h3 id="ss"></h3>
-<button onclick="resetSnake()">Restart</button>
+<button onclick="resetSnake()">Restart Snake</button>
 </div>
 
 <!-- PONG -->
 <div id="pong" class="section">
 <canvas id="p" width="400" height="400"></canvas>
-<button onclick="resetPong()">Restart</button>
+<button onclick="resetPong()">Restart Pong</button>
 </div>
 
 <!-- FLAPPY -->
 <div id="flappy" class="section">
 <canvas id="f" width="300" height="500"></canvas>
 <h3 id="fs"></h3>
-<button onclick="resetFlappy()">Restart</button>
+<button onclick="resetFlappy()">Restart Flappy</button>
 </div>
 
 <!-- REACTION -->
@@ -94,7 +94,9 @@ document.querySelectorAll('.section').forEach(s=>s.style.display='none');
 function beep(f=200){let a=new AudioContext(),o=a.createOscillator();o.frequency.value=f;o.connect(a.destination);o.start();o.stop(a.currentTime+0.1);}
 
 // ------------------- SNAKE -------------------
-let sctx=s.getContext('2d'),snake,dir,food,score;
+let sCanvas=document.getElementById('s');
+let sctx=sCanvas.getContext('2d');
+let snake,dir,food,score;
 function resetSnake(){
 snake=[[80,80],[60,80],[40,80],[20,80]];
 dir=[20,0];
@@ -104,37 +106,45 @@ score=0;
 resetSnake();
 function snakeLoop(){
 sctx.clearRect(0,0,400,400);
+sctx.fillStyle="lime";
 snake.forEach(p=>sctx.fillRect(p[0],p[1],20,20));
-sctx.fillStyle="red";sctx.fillRect(food[0],food[1],20,20);
+sctx.fillStyle="red";
+sctx.fillRect(food[0],food[1],20,20);
 
 let head=[snake[0][0]+dir[0],snake[0][1]+dir[1]];
-if(head[0]<0||head[1]<0||head[0]>=400||head[1]>=400||snake.some(p=>p[0]==head[0]&&p[1]==head[1])){resetSnake();beep(100);}
+if(head[0]<0||head[1]<0||head[0]>=400||head[1]>=400||snake.some(p=>p[0]==head[0]&&p[1]==head[1])){
+resetSnake();beep(100);}
 snake.unshift(head);
 if(head[0]==food[0]&&head[1]==food[1]){score++;food=[Math.floor(Math.random()*20)*20,Math.floor(Math.random()*20)*20];beep(400);}else snake.pop();
-ss.innerText="Score: "+score;
+document.getElementById('ss').innerText="Score: "+score;
 requestAnimationFrame(snakeLoop);
 }
 snakeLoop();
-onkeydown=e=>{
+window.addEventListener('keydown',e=>{
 if(e.key=="ArrowUp"&&dir[1]!=20)dir=[0,-20];
 if(e.key=="ArrowDown"&&dir[1]!=-20)dir=[0,20];
 if(e.key=="ArrowLeft"&&dir[0]!=20)dir=[-20,0];
 if(e.key=="ArrowRight"&&dir[0]!=-20)dir=[20,0];
-};
+});
 
 // ------------------- PONG -------------------
-let pctx=p.getContext('2d'),px=200,py=200,pdx=3,pdy=3,ppad=150;
+let pCanvas=document.getElementById('p');
+let pctx=pCanvas.getContext('2d');
+let px=200,py=200,pdx=3,pdy=3,ppad=150;
 function resetPong(){px=200;py=200;pdx=3;pdy=3;ppad=150;}
 function pongLoop(){
 pctx.clearRect(0,0,400,400);
+pctx.fillStyle="lime";
 pctx.fillRect(ppad,380,80,10);
-pctx.beginPath();pctx.arc(px,py,8,0,7);pctx.fill();
+pctx.beginPath();pctx.arc(px,py,8,0,Math.PI*2);pctx.fill();
 px+=pdx;py+=pdy;
-if(px<0||px>400)pdx*=-1;if(py<0)pdy*=-1;if(py>380&&px>ppad&&px<ppad+80)pdy*=-1;
+if(px<0||px>400)pdx*=-1;
+if(py<0)pdy*=-1;
+if(py>380&&px>ppad&&px<ppad+80)pdy*=-1;
 requestAnimationFrame(pongLoop);
 }
 pongLoop();
-p.onmousemove=e=>ppad=e.offsetX;
+pCanvas.addEventListener('mousemove',e=>ppad=e.offsetX-40);
 
 // ------------------- FLAPPY -------------------
 let fy=200,fv=0,pipes=[],fscore=0;
