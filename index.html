@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arcade Hub v5.0 STABLE GOD MODE</title>
+<title>Arcade Hub v5.0 LIGHT</title>
 <style>
 body{margin:0;background:#050510;color:#0ff;font-family:sans-serif;text-align:center;}
 h1{text-shadow:0 0 20px #0ff;}
@@ -17,8 +17,7 @@ button{margin:5px;padding:10px;background:#111;color:#0ff;border:1px solid #0ff;
 </head>
 <body>
 
-<div id="version">v5.0 STABLE GOD MODE</div>
-
+<div id="version">v5.0 LIGHT</div>
 <h1>Welcome to my Kingdom</h1>
 
 <div id="menu">
@@ -26,10 +25,6 @@ button{margin:5px;padding:10px;background:#111;color:#0ff;border:1px solid #0ff;
 <div class="bubble" onclick="openGame('snake')">Snake</div>
 <div class="bubble" onclick="openGame('pong')">Pong</div>
 <div class="bubble" onclick="openGame('flappy')">Flappy</div>
-<div class="bubble" onclick="openGame('breakout')">Breakout</div>
-<div class="bubble" onclick="openGame('tetris')">Tetris</div>
-<div class="bubble" onclick="openGame('doodle')">Doodle</div>
-<div class="bubble" onclick="openGame('clicker')">Clicker</div>
 <div class="bubble" onclick="openGame('reaction')">Reaction</div>
 <div class="bubble" onclick="openGame('calc')">Calc</div>
 <div class="bubble" onclick="openGame('magic')">8Ball</div>
@@ -39,61 +34,46 @@ button{margin:5px;padding:10px;background:#111;color:#0ff;border:1px solid #0ff;
 
 <button onclick="back()">⬅ Menu</button>
 
-<!-- GAME SECTIONS -->
+<!-- SNAKE -->
 <div id="snake" class="section">
 <canvas id="s" width="400" height="400"></canvas>
 <h3 id="ss"></h3>
 <button onclick="resetSnake()">Restart</button>
 </div>
 
+<!-- PONG -->
 <div id="pong" class="section">
 <canvas id="p" width="400" height="400"></canvas>
 <button onclick="resetPong()">Restart</button>
 </div>
 
+<!-- FLAPPY -->
 <div id="flappy" class="section">
 <canvas id="f" width="300" height="500"></canvas>
 <h3 id="fs"></h3>
 <button onclick="resetFlappy()">Restart</button>
 </div>
 
-<div id="breakout" class="section">
-<canvas id="b" width="400" height="400"></canvas>
-<h3 id="bs"></h3>
-<button onclick="resetBreakout()">Restart</button>
-</div>
-
-<div id="tetris" class="section">
-<canvas id="t" width="200" height="400"></canvas>
-<button onclick="resetTetris()">Restart</button>
-</div>
-
-<div id="doodle" class="section">
-<canvas id="d" width="300" height="500"></canvas>
-<button onclick="resetDoodle()">Restart</button>
-</div>
-
-<div id="clicker" class="section">
-<h1 id="money">0</h1>
-<button onclick="money++;updateMoney()">Tap</button>
-</div>
-
+<!-- REACTION -->
 <div id="reaction" class="section">
 <h2 id="react">Press Start</h2>
 <button onclick="startReaction()">Start</button>
 </div>
 
+<!-- CALCULATOR -->
 <div id="calc" class="section">
 <input id="ci">
 <button onclick="calc()">=</button>
 <h2 id="co"></h2>
 </div>
 
+<!-- MAGIC -->
 <div id="magic" class="section">
 <button onclick="ask()">Ask</button>
 <h2 id="mo"></h2>
 </div>
 
+<!-- CREDITS -->
 <div id="credits" class="section">
 <h2>Me and Jed are terking off</h2>
 </div>
@@ -122,7 +102,7 @@ food=[200,200];
 score=0;
 }
 resetSnake();
-let snakeLoop=function(){
+function snakeLoop(){
 sctx.clearRect(0,0,400,400);
 snake.forEach(p=>sctx.fillRect(p[0],p[1],20,20));
 sctx.fillStyle="red";sctx.fillRect(food[0],food[1],20,20);
@@ -133,7 +113,7 @@ snake.unshift(head);
 if(head[0]==food[0]&&head[1]==food[1]){score++;food=[Math.floor(Math.random()*20)*20,Math.floor(Math.random()*20)*20];beep(400);}else snake.pop();
 ss.innerText="Score: "+score;
 requestAnimationFrame(snakeLoop);
-};
+}
 snakeLoop();
 onkeydown=e=>{
 if(e.key=="ArrowUp"&&dir[1]!=20)dir=[0,-20];
@@ -145,40 +125,49 @@ if(e.key=="ArrowRight"&&dir[0]!=-20)dir=[20,0];
 // ------------------- PONG -------------------
 let pctx=p.getContext('2d'),px=200,py=200,pdx=3,pdy=3,ppad=150;
 function resetPong(){px=200;py=200;pdx=3;pdy=3;ppad=150;}
-let pongLoop=function(){
+function pongLoop(){
 pctx.clearRect(0,0,400,400);
 pctx.fillRect(ppad,380,80,10);
 pctx.beginPath();pctx.arc(px,py,8,0,7);pctx.fill();
 px+=pdx;py+=pdy;
 if(px<0||px>400)pdx*=-1;if(py<0)pdy*=-1;if(py>380&&px>ppad&&px<ppad+80)pdy*=-1;
 requestAnimationFrame(pongLoop);
-};
+}
 pongLoop();
 p.onmousemove=e=>ppad=e.offsetX;
 
 // ------------------- FLAPPY -------------------
 let fy=200,fv=0,pipes=[],fscore=0;
 function resetFlappy(){fy=200;fv=0;pipes=[];fscore=0;}
-let flappyLoop=function(){
+function flappyLoop(){
 let c=f.getContext('2d');c.clearRect(0,0,300,500);
 fv+=0.5;fy+=fv;if(Math.random()<0.02)pipes.push({x:300,g:Math.random()*200,passed:false});
 pipes.forEach(p=>{p.x-=2;c.fillRect(p.x,0,30,p.g);c.fillRect(p.x,p.g+120,30,500);if(!p.passed&&p.x<50){fscore++;p.passed=true;beep(300);}if(50>p.x&&50<p.x+30&&(fy<p.g||fy>p.g+120)){resetFlappy();}});
 c.beginPath();c.arc(50,fy,10,0,7);c.fill();
 fs.innerText="Score: "+fscore;
 requestAnimationFrame(flappyLoop);
-};
+}
 flappyLoop();
 onclick=()=>fv=-8;
 
+// ------------------- REACTION -------------------
+function startReaction(){
+react.innerText="Wait...";
+setTimeout(()=>{
+react.innerText="CLICK!";
+let t=Date.now();
+document.onclick=function(){react.innerText=(Date.now()-t)+" ms";document.onclick=null;}
+},Math.random()*2000+1000);
+}
+
 // ------------------- CALCULATOR -------------------
-function calc(){let val=ci.value.replace(/[^0-9+\-*/().]/g,"");try{co.innerText=Function("return "+val)()+" HEMMY BOY";}catch{co.innerText="ERROR HEMMY BOY";}}
+function calc(){
+let val=ci.value.replace(/[^0-9+\-*/().]/g,"");
+try{co.innerText=Function("return "+val)()+" HEMMY BOY";}catch{co.innerText="ERROR HEMMY BOY";}
+}
 
 // ------------------- MAGIC -------------------
 function ask(){let arr=["Yes","No","Maybe","Definitely","Never"];mo.innerText=arr[Math.floor(Math.random()*arr.length)]+" HEMMY 😂🫱";}
-
-// ------------------- CLICKER -------------------
-let money=0;function updateMoney(){moneyDisplay.innerText=money;}
 </script>
-
 </body>
 </html>
