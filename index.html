@@ -1,226 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secretsimo Games Hub v1.8</title>
+<title>Arcade Hub v1.9</title>
 <style>
-html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#0f0f1f;color:#0ff;font-family:Arial;}
-h1{text-align:center;margin:20px;font-size:2.5rem;text-shadow:0 0 10px #0ff,0 0 20px #0ff,0 0 30px #0ff;}
-canvas{display:block;margin:auto;border:2px solid #0ff;max-width:95%;max-height:80%;}
-#versionLabel{position:fixed;top:5px;right:10px;color:#0ff;font-weight:bold;font-size:16px;z-index:20;}
-#main-ui{position:relative; z-index:2; padding-top:40px; text-align:center;}
-.bubble-container{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;}
-.bubble{width:130px;height:130px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 12px #0ff,0 0 24px #0ff;background:#1b1b35;font-weight:bold;transition:.3s;text-align:center;}
-.bubble:hover{transform:scale(1.2); box-shadow:0 0 20px #ff0,0 0 40px #ff0;}
-.game-section{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:90vh;position:relative;z-index:2;}
-.gear-button{position:fixed;top:20px;right:20px;width:60px;height:60px;border-radius:50%;background:#1b1b35;color:#0ff;font-size:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 12px #0ff,0 0 24px #0ff;z-index:10;}
-.gear-button:hover{transform:scale(1.2);box-shadow:0 0 24px #ff0,0 0 48px #ff0;}
-@media(max-width:480px){.bubble{width:100px;height:100px;font-size:0.9rem;} h1{font-size:1.8rem;} .gear-button{width:50px;height:50px;font-size:22px;}}
-button{background:#1b1b35;color:#0ff;font-size:1rem;padding:10px 15px;margin:5px;border:none;border-radius:8px;cursor:pointer;}
-button:hover{background:#0ff;color:#1b1b35;}
-input{padding:8px;font-size:1rem;margin:5px;border-radius:6px;border:none;}
+body{margin:0;background:#0f0f1f;color:#0ff;font-family:sans-serif;text-align:center;}
+h1{text-shadow:0 0 10px #0ff;}
+.bubbles{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;}
+.bubble{width:110px;height:110px;border-radius:50%;background:#1b1b35;
+display:flex;align-items:center;justify-content:center;cursor:pointer;
+box-shadow:0 0 15px #0ff;}
+canvas{background:#000;margin:auto;display:block;max-width:95%;}
+.section{display:none;}
+button{padding:10px;margin:5px;}
+#version{position:fixed;top:5px;right:10px;}
 </style>
 </head>
 <body>
 
-<div id="versionLabel">v1.8</div>
+<div id="version">v1.9</div>
 
-<!-- Main UI -->
-<div id="main-ui">
+<div id="menu">
 <h1>Welcome to my Kingdom</h1>
-<div class="bubble-container">
-  <div class="bubble" onclick="openGame('snake')">Snake</div>
-  <div class="bubble" onclick="openGame('pong')">Pong</div>
-  <div class="bubble" onclick="openGame('flappy')">Flappy Bird</div>
-  <div class="bubble" onclick="openGame('calculator')">Calculator</div>
-  <div class="bubble" onclick="openGame('magic8')">Magic 8-Ball</div>
-  <div class="bubble" onclick="openGame('credits')">Credits</div>
+<div class="bubbles">
+<div class="bubble" onclick="openGame('snake')">Snake</div>
+<div class="bubble" onclick="openGame('pong')">Pong</div>
+<div class="bubble" onclick="openGame('flappy')">Flappy</div>
+<div class="bubble" onclick="openGame('breakout')">Breakout</div>
+<div class="bubble" onclick="openGame('tetris')">Tetris</div>
+<div class="bubble" onclick="openGame('doodle')">Doodle</div>
+<div class="bubble" onclick="openGame('clicker')">Clicker</div>
+<div class="bubble" onclick="openGame('memory')">Memory</div>
+<div class="bubble" onclick="openGame('reaction')">Reaction</div>
+<div class="bubble" onclick="openGame('calc')">Calc</div>
+<div class="bubble" onclick="openGame('magic')">8Ball</div>
+<div class="bubble" onclick="openGame('credits')">Credits</div>
 </div>
 </div>
 
-<div class="gear-button" onclick="backToUI()">↩</div>
+<button onclick="back()">⬅</button>
 
-<!-- Snake -->
-<div class="game-section" id="snake">
-<h1>Snake</h1>
-<canvas id="snakeCanvas" width="600" height="400"></canvas>
-<p id="snakeScore" style="color:#0ff;font-size:1.2rem;">Score:0</p>
+<!-- SECTIONS -->
+<div id="snake" class="section"><canvas id="s" width="400" height="400"></canvas></div>
+<div id="pong" class="section"><canvas id="p" width="400" height="400"></canvas></div>
+<div id="flappy" class="section"><canvas id="f" width="300" height="500"></canvas></div>
+<div id="breakout" class="section"><canvas id="b" width="400" height="400"></canvas></div>
+<div id="tetris" class="section"><canvas id="t" width="200" height="400"></canvas></div>
+<div id="doodle" class="section"><canvas id="d" width="300" height="500"></canvas></div>
+<div id="clicker" class="section"><h1 id="money">0</h1><button onclick="money+=1">Tap</button></div>
+<div id="memory" class="section"><div id="mem"></div></div>
+<div id="reaction" class="section"><button onclick="startReact()">Start</button><h2 id="react"></h2></div>
+<div id="calc" class="section">
+<input id="ci"><button onclick="co.innerText=eval(ci.value)+' HEMMY BOY'">=</button><h2 id="co"></h2>
 </div>
-
-<!-- Pong -->
-<div class="game-section" id="pong">
-<h1>Pong</h1>
-<canvas id="pongCanvas" width="600" height="400"></canvas>
-<p id="pongScore" style="color:#0ff;font-size:1.2rem;">Score:0</p>
+<div id="magic" class="section">
+<button onclick="magic()">Ask</button><h2 id="ma"></h2>
 </div>
-
-<!-- Flappy Bird -->
-<div class="game-section" id="flappy">
-<h1>Flappy Bird</h1>
-<canvas id="flappyCanvas" width="400" height="600"></canvas>
-<p id="flappyScore" style="color:#0ff;font-size:1.2rem;">Score:0</p>
-</div>
-
-<!-- Calculator -->
-<div class="game-section" id="calculator">
-<h1>AI Calculator</h1>
-<input type="text" id="calcInput" placeholder="Type e.g. 6*7">
-<button onclick="solveMath()">Solve</button>
-<p id="calcOutput"></p>
-</div>
-
-<!-- Magic 8-Ball -->
-<div class="game-section" id="magic8">
-<h1>Magic 8-Ball</h1>
-<button onclick="shake8Ball()">Ask</button>
-<p id="magic8Answer" style="color:#0ff;font-size:1.5rem;margin-top:20px;"></p>
-</div>
-
-<!-- Credits -->
-<div class="game-section" id="credits">
-<h1>Credits</h1>
-<p style="color:#0ff;font-size:1.5rem;">Me and Jed are terking off</p>
-</div>
+<div id="credits" class="section"><h2>Me and Jed are terking off</h2></div>
 
 <script>
-// ---------------- UI Navigation ----------------
-function openGame(id){
-  document.getElementById('main-ui').style.display='none';
-  document.querySelectorAll('.game-section').forEach(s=>s.style.display='none');
-  document.getElementById(id).style.display='flex';
+// NAV
+function openGame(id){menu.style.display='none';document.querySelectorAll('.section').forEach(s=>s.style.display='none');document.getElementById(id).style.display='block';}
+function back(){menu.style.display='block';document.querySelectorAll('.section').forEach(s=>s.style.display='none');}
+
+// ---------------- SNAKE ----------------
+let sctx=s.getContext('2d'),snake=[[80,80],[60,80],[40,80],[20,80]],dir=[20,0],food=[200,200];
+function snakeGame(){
+let head=[snake[0][0]+dir[0],snake[0][1]+dir[1]];
+snake.unshift(head);
+if(head[0]==food[0]&&head[1]==food[1])food=[Math.floor(Math.random()*20)*20,Math.floor(Math.random()*20)*20];
+else snake.pop();
+sctx.clearRect(0,0,400,400);
+snake.forEach(p=>{sctx.fillStyle="#0ff";sctx.fillRect(p[0],p[1],20,20);});
+sctx.fillStyle="#ff0";sctx.fillRect(food[0],food[1],20,20);
 }
-function backToUI(){
-  document.getElementById('main-ui').style.display='block';
-  document.querySelectorAll('.game-section').forEach(s=>s.style.display='none');
+setInterval(snakeGame,120);
+onkeydown=e=>{if(e.key=="ArrowUp")dir=[0,-20];if(e.key=="ArrowDown")dir=[0,20];if(e.key=="ArrowLeft")dir=[-20,0];if(e.key=="ArrowRight")dir=[20,0];}
+
+// ---------------- PONG ----------------
+let px=200,py=200,pdx=3,pdy=3,pyy=150;
+function pong(){
+let c=p.getContext('2d');c.clearRect(0,0,400,400);
+c.fillRect(0,pyy,10,80);
+c.beginPath();c.arc(px,py,8,0,7);c.fill();
+px+=pdx;py+=pdy;
+if(py<0||py>400)pdy*=-1;
+if(px<10&&py>pyy&&py<pyy+80)pdx*=-1;
+if(px>400)pdx*=-1;
+requestAnimationFrame(pong);
+}
+pong();
+p.onmousemove=e=>pyy=e.offsetY;
+
+// ---------------- FLAPPY ----------------
+let by=200,vel=0,pipes=[];
+function flappy(){
+let c=f.getContext('2d');c.clearRect(0,0,300,500);
+vel+=0.5;by+=vel;
+if(Math.random()<.02)pipes.push({x:300,g:Math.random()*200});
+pipes.forEach(p=>{p.x-=2;c.fillRect(p.x,0,30,p.g);c.fillRect(p.x,p.g+100,30,500);});
+c.beginPath();c.arc(50,by,10,0,7);c.fill();
+requestAnimationFrame(flappy);
+}
+flappy();
+onclick=()=>vel=-8;
+
+// ---------------- BREAKOUT ----------------
+let bx=200,by2=200,bdx=3,bdy=3,paddle=150;
+let bricks=Array.from({length:5},(_,i)=>Array.from({length:8},(_,j)=>[j*50,i*20]));
+function breakout(){
+let c=b.getContext('2d');c.clearRect(0,0,400,400);
+c.fillRect(paddle,380,80,10);
+c.beginPath();c.arc(bx,by2,8,0,7);c.fill();
+bx+=bdx;by2+=bdy;
+if(by2>380&&bx>paddle&&bx<paddle+80)bdy*=-1;
+if(bx<0||bx>400)bdx*=-1;if(by2<0)bdy*=-1;
+bricks.flat().forEach(br=>{c.fillRect(br[0],br[1],40,10);});
+requestAnimationFrame(breakout);
+}
+breakout();
+b.onmousemove=e=>paddle=e.offsetX;
+
+// ---------------- TETRIS (simple) ----------------
+let tctx=t.getContext('2d');
+setInterval(()=>{tctx.fillRect(Math.random()*200,0,20,20);},500);
+
+// ---------------- DOODLE ----------------
+let dy=400,vy=-5;
+function doodle(){
+let c=d.getContext('2d');c.clearRect(0,0,300,500);
+vy+=.3;dy+=vy;
+c.fillRect(140,dy,20,20);
+if(dy>480)vy=-10;
+requestAnimationFrame(doodle);
+}
+doodle();
+
+// ---------------- CLICKER ----------------
+let money=0;
+
+// ---------------- MEMORY ----------------
+let arr=[1,1,2,2,3,3].sort(()=>Math.random()-0.5);
+mem.innerHTML=arr.map((n,i)=>`<button onclick="this.innerText=${n}">${n}</button>`).join('');
+
+// ---------------- REACTION ----------------
+function startReact(){
+react.innerText="Wait...";
+setTimeout(()=>{
+let t=Date.now();
+document.body.onclick=()=>react.innerText=(Date.now()-t)+" ms";
+},Math.random()*3000);
 }
 
-// ---------------- Calculator ----------------
-function solveMath(){
-  let input=document.getElementById('calcInput').value;
-  let ans;
-  try{ans=eval(input);}catch(e){ans='Error';}
-  document.getElementById('calcOutput').textContent=ans+" HEMMY BOY";
-}
-
-// ---------------- Magic 8-Ball ----------------
-const answers=["Yes","No","Maybe","Absolutely","Not a chance","Ask again later"];
-function shake8Ball(){
-  const rand=answers[Math.floor(Math.random()*answers.length)];
-  document.getElementById('magic8Answer').textContent=rand+" HEMMY 😂🫱";
-}
-
-// ---------------- Snake v1.8 FIXED ----------------
-const sCanvas=document.getElementById('snakeCanvas');
-const sCtx=sCanvas.getContext('2d');
-let snSize=20, snScore=0, snDir='RIGHT';
-let snBody=[{x:60,y:60},{x:40,y:60},{x:20,y:60},{x:0,y:60}];
-let food={x:100,y:100};
-
-function placeFood(){
-  food = {x:Math.floor(Math.random()*(sCanvas.width/snSize))*snSize,
-          y:Math.floor(Math.random()*(sCanvas.height/snSize))*snSize};
-  if(snBody.some(b=>b.x===food.x && b.y===food.y)) placeFood();
-}
-
-function updateSnake(){
-  const head={...snBody[0]};
-  if(snDir==='LEFT') head.x -= snSize;
-  if(snDir==='RIGHT') head.x += snSize;
-  if(snDir==='UP') head.y -= snSize;
-  if(snDir==='DOWN') head.y += snSize;
-
-  snBody.unshift(head);
-
-  // food
-  if(head.x===food.x && head.y===food.y){snScore++; placeFood();}
-  else snBody.pop();
-
-  // collisions
-  if(head.x<0||head.x>=sCanvas.width||head.y<0||head.y>=sCanvas.height||
-     snBody.slice(1).some(b=>b.x===head.x&&b.y===head.y)){
-    snBody=[{x:60,y:60},{x:40,y:60},{x:20,y:60},{x:0,y:60}]; snScore=0; snDir='RIGHT'; placeFood();
-  }
-
-  document.getElementById('snakeScore').textContent="Score:"+snScore;
-}
-
-function drawSnake(){
-  sCtx.clearRect(0,0,sCanvas.width,sCanvas.height);
-  snBody.forEach((b,i)=>{
-    const grad=sCtx.createLinearGradient(b.x,b.y,b.x+snSize,b.y+snSize);
-    grad.addColorStop(0,`hsl(${(i*40)%360},100%,50%)`);
-    grad.addColorStop(1,"#0ff");
-    sCtx.fillStyle=grad; sCtx.shadowColor="#0ff"; sCtx.shadowBlur=10; sCtx.fillRect(b.x,b.y,snSize,snSize);
-  });
-  sCtx.fillStyle="#ff0"; sCtx.shadowColor="#ff0"; sCtx.shadowBlur=15;
-  sCtx.fillRect(food.x,food.y,snSize,snSize); sCtx.shadowBlur=0;
-}
-
-setInterval(updateSnake, 150); // logic every 150ms
-function animateSnake(){drawSnake(); requestAnimationFrame(animateSnake);}
-animateSnake();
-
-// controls
-document.addEventListener('keydown', e=>{
-  if(e.key==='ArrowUp' && snDir!=='DOWN') snDir='UP';
-  if(e.key==='ArrowDown' && snDir!=='UP') snDir='DOWN';
-  if(e.key==='ArrowLeft' && snDir!=='RIGHT') snDir='LEFT';
-  if(e.key==='ArrowRight' && snDir!=='LEFT') snDir='RIGHT';
-});
-
-let startX=0,startY=0;
-sCanvas.addEventListener('touchstart', e=>{startX=e.touches[0].clientX; startY=e.touches[0].clientY;});
-sCanvas.addEventListener('touchmove', e=>{
-  const dx=e.touches[0].clientX-startX;
-  const dy=e.touches[0].clientY-startY;
-  if(Math.abs(dx)>Math.abs(dy)){
-    if(dx>0 && snDir!=='LEFT') snDir='RIGHT';
-    else if(dx<0 && snDir!=='RIGHT') snDir='LEFT';
-  } else{
-    if(dy>0 && snDir!=='UP') snDir='DOWN';
-    else if(dy<0 && snDir!=='DOWN') snDir='UP';
-  }
-  startX=e.touches[0].clientX; startY=e.touches[0].clientY;
-});
-
-// ---------------- Pong ----------------
-const pCanvas=document.getElementById('pongCanvas'),pCtx=pCanvas.getContext('2d');
-let pScore=0, px=pCanvas.width/2, py=pCanvas.height/2, pdx=4, pdy=4, paddleY=pCanvas.height/2-30;
-function drawPong(){
-  pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
-  pCtx.fillStyle="#0ff"; pCtx.fillRect(0,paddleY,10,60);
-  pCtx.beginPath(); pCtx.arc(px,py,8,0,Math.PI*2); pCtx.fillStyle="#ff0"; pCtx.fill(); pCtx.closePath();
-  px+=pdx; py+=pdy;
-  if(py<8||py>pCanvas.height-8)pdy=-pdy;if(px>pCanvas.width-8)pdx=-pdx;
-  if(px<18 && py>paddleY && py<paddleY+60){pdx=-pdx;pScore++;}
-  if(px<0){px=pCanvas.width/2; py=pCanvas.height/2; pScore=0;}
-  document.getElementById('pongScore').textContent="Score:"+pScore;
-  requestAnimationFrame(drawPong);
-}
-pCanvas.addEventListener('mousemove', e=>{paddleY=e.clientY-pCanvas.getBoundingClientRect().top-30;});
-pCanvas.addEventListener('touchmove', e=>{paddleY=e.touches[0].clientY-pCanvas.getBoundingClientRect().top-30;});
-drawPong();
-
-// ---------------- Flappy Bird ----------------
-const fCanvas=document.getElementById('flappyCanvas'), fCtx=fCanvas.getContext('2d');
-let bird={x:50,y:300,dy:0}, gravity=0.6, pipes=[], flScore=0, fFrame=0;
-function drawFlappy(){
-  fCtx.clearRect(0,0,fCanvas.width,fCanvas.height);
-  bird.dy+=gravity; bird.y+=bird.dy;
-  if(fFrame%90===0){ let topH=Math.random()*150+50; pipes.push({x:fCanvas.width,top:topH}); }
-  pipes.forEach(p=>{p.x-=2; fCtx.fillStyle="#0f0"; fCtx.fillRect(p.x,0,20,p.top); fCtx.fillRect(p.x,p.top+100,20,fCanvas.height-(p.top+100));});
-  pipes=pipes.filter(p=>p.x+20>0);
-  pipes.forEach(p=>{if(bird.x+10>p.x && bird.x-10<p.x+20 && (bird.y-10<p.top || bird.y+10>p.top+100)){bird.y=300; bird.dy=0; pipes=[]; flScore=0;}});
-  if(bird.y>fCanvas.height||bird.y<0){bird.y=300; bird.dy=0; pipes=[]; flScore=0;}
-  fCtx.fillStyle="#ff0"; fCtx.beginPath(); fCtx.arc(bird.x,bird.y,7,0,Math.PI*2); fCtx.fill(); fCtx.closePath();
-  document.getElementById('flappyScore').textContent="Score:"+flScore;
-  fFrame++; requestAnimationFrame(drawFlappy);
-}
-fCanvas.addEventListener('touchstart',()=>bird.dy=-10);
-document.addEventListener('keydown', e=>{if(e.key===' ') bird.dy=-10;});
-drawFlappy();
-
+// ---------------- MAGIC ----------------
+function magic(){ma.innerText=["Yes","No","Maybe"][Math.floor(Math.random()*3)]+" HEMMY 😂🫱";}
 </script>
 </body>
 </html>
